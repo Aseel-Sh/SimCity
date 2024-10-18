@@ -2,7 +2,7 @@
 
 in order to compile with no errors you need to use this line
 
-g++ -std=c++11 main.cpp config.cpp region.cpp -o simulation
+g++ -std=c++11 main.cpp Config.cpp Region.cpp -o simulation
 
 ./simulation
 

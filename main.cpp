@@ -4,9 +4,13 @@
 
 int main() {
 
+    std::string configFileName; // Variable to store config file name
+    std::cout << "Please provide the config file name." << std::endl;
+    std::getline(std::cin, configFileName);
+
     // Loads the config from the config1 file and then out puts the data
     Config config;
-    config.loadConfig("config1.txt");
+    config.loadConfig(configFileName);
 
     std::cout << "Region layout: " << config.regionFile << '\n';
     std::cout << "Time Limit: " << config.timeLimit << '\n';
