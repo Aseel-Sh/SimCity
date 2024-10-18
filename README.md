@@ -17,7 +17,8 @@ and so on
 
 - Ronnie
 
-Note: The changes below are only visible on my branch, not this main branch
+Note: The changes below are only visible on my branch, not this main branch.
+
 I created an "Output-And-Commercial" branch so I can work on my part without messing up main code.
 The output wont work anymore temporarily (in my branch) as the code is now incomplete since we decided to go with the inheritance path. Once the Industrial and Residential Classes are added, and the loadRegion() in the region.cpp file is modified to reflect the added classes then the output should work normally.
 
