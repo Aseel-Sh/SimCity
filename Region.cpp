@@ -1,4 +1,5 @@
 #include "Region.h"
+#include "Commercial.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -8,7 +9,7 @@
 Cell::Cell(char zoneType) : zoneType(zoneType) {}
 
 // Creates a 2d Vector grid with rows, where each row contains cols Cell objects
-Region::Region(int rows, int cols) : rows(rows), cols(cols), grid(rows, std::vector<Cell>(cols)) {}
+Region::Region(int rows, int cols) : rows(rows), cols(cols), grid(rows, std::vector<Cell*>(cols)) {} //also changed this to ptr - Aseel
 
 // This reads the file and extracts the data from the csv file
 void Region::loadRegion(const std::string& fileName) {
@@ -28,7 +29,17 @@ void Region::loadRegion(const std::string& fileName) {
         int col = 0;
 
         while (std::getline(ss, cellValue, ',') && col < cols) {
-            grid[row][col] = Cell(cellValue[0]); // Creates the Cell based off the info from the CSV data
+            //since we using inheritance I had to change this to create a cell based on type (eg an "I" will create a cell using "I" class) -Aseel
+            //Yall can add ur stuff here I only added my part
+            char zoneType = cellValue[0];
+            switch (zoneType)
+            {
+            case 'C':
+                grid[row][col] = new Commercial(); //create a commerical cell if zonetype is C
+                break;
+            default:
+                break;
+            }
             col++;
         }
 
@@ -40,7 +51,7 @@ void Region::loadRegion(const std::string& fileName) {
 void Region::printRegion() const {
     for (const auto& row : grid) {
         for (const auto& cell : row) {
-            std::cout << cell.zoneType << " ";
+            std::cout << cell->zoneType << " "; //changed "." to "->" since its a ptr now
         }
         std::cout << '\n';
     }
