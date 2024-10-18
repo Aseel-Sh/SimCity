@@ -32,3 +32,10 @@ g++ -std=c++11 main.cpp config.cpp region.cpp commercial.cpp -o simulation
 ./simulation
 
 - Aseel
+
+Master branch changes:
+- Changed main.cpp to prompt user for config file name, instead of it being hardcoded into the program, tested and evverything.
+- Created a makefile for easier compliation, with a make clean and make run commands, which creates object files and the simulation file. 
+
+In order to now run the program, you can simply use make, and make run to compile, and make clean to get rid of all the object files.
+-Kyi 
