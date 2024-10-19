@@ -15,6 +15,7 @@ class Cell {
         Cell(char zoneType = '-'); // defaults the place holder to roads
         virtual void grow()= 0; //the abstract grow func, will differ based on cell zone type
 
+
 };
 
 class Region {
@@ -31,6 +32,16 @@ class Region {
 
         // Finds the region size
         static void getRegionSize(const std::string& fileName, int& rows, int& cols);
+
+        //a vector to store ptrs to the adj cells of curr cell
+        std::vector<Cell*> getAdjacentCells(const std::vector<std::vector<Cell*>>& grid, int x, int y) const;
+        //shared funcs with all 3 zones
+        //bool hasPowerline() const;
+        //int getAvailableWorkers() const;
+        //int getAvailableGoods() const;
+        //int getAdjPopulation() const;
+
+
 };
 
 #endif

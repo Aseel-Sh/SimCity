@@ -1,5 +1,6 @@
 #include "Region.h"
 #include "Commercial.h"
+#include "OtherRegion.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -37,7 +38,14 @@ void Region::loadRegion(const std::string& fileName) {
             case 'C':
                 grid[row][col] = new Commercial(); //create a commerical cell if zonetype is C
                 break;
+            case 'T':
+            case '#':
+            case 'P':
+            case '-':
+                grid[row][col] = new OtherRegion(zoneType);
+                break;
             default:
+                grid[row][col] = nullptr;
                 break;
             }
             col++;
@@ -51,7 +59,12 @@ void Region::loadRegion(const std::string& fileName) {
 void Region::printRegion() const {
     for (const auto& row : grid) {
         for (const auto& cell : row) {
-            std::cout << cell->zoneType << " "; //changed "." to "->" since its a ptr now
+            if(cell != nullptr)
+            {
+                std::cout << cell->zoneType << " "; //changed "." to "->" since its a ptr now
+            }else{
+                std::cout << "  ";
+            }
         }
         std::cout << '\n';
     }
@@ -84,4 +97,38 @@ void Region::getRegionSize(const std::string& fileName, int& rows, int& cols) {
             cols = currentCols;
         }
     }
+}
+
+std::vector<Cell*> Region::getAdjacentCells(const std::vector<std::vector<Cell*>>& grid, int x, int y) const {
+
+    int n  = grid.size(); //num of rows
+
+    std::vector<Cell*> adjCells;
+
+    //deviation of row, checks rows up,curr,below. If there exists row above then set dx = -1 which will check that
+    //else dx = 0, if dx not last row then set dx = 1 to check row below else set = 0
+    for (int dx = (x > 0 ? -1 : 0); dx <= (x < n - 1 ? 1 : 0); dx++)
+    {
+        //deviation of col, col to left? dy = -1 else dy = 0. not last col? dy = 1 else dy = 0
+        for (int dy = (y > 0 ? -1 : 0); dy <= (y < grid[x + dx].size() ? 1 : 0); dy++)
+        {
+            if (dx != 0 || dy != 0) //make sure we dont add the curr cell
+            {
+                //adj cell coordinates
+                int newX = x + dx;
+                int newY = y + dy;
+
+                //since non uniform grid i have to check if the new coord is within bounds
+                if (newX >= 0 && newX < n && newY >= 0 && newY < grid[newX].size())
+                {
+                    adjCells.push_back(grid[newX][newY]);
+                }
+                
+            }
+            
+        }     
+    }
+    
+    return adjCells;
+
 }

@@ -27,9 +27,8 @@ I added comments where I changed or added stuff, and since this is a branch our 
 
 Updated compile line:
 
-g++ -std=c++11 main.cpp config.cpp region.cpp commercial.cpp -o simulation
-
-./simulation
+If using Mingw64 and VsCode: mingw32-make run
+If using anything else: make run
 
 - Aseel
 

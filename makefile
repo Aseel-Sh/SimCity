@@ -10,6 +10,9 @@ Config.o: Config.cpp Config.h
 Region.o: Region.cpp Region.h
 	g++ -c Region.cpp
 
+Commercial.o: Commercial.cpp Commercial.h
+	g++ -c Commercial.cpp
+
 clean:
 	rm *.o simulation
 
