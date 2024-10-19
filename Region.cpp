@@ -146,6 +146,21 @@ bool Region::adjToPowerline(int x, int y) const {
     
 }
 
+int Region:: getCountPopulatedAdjCell(int x, int y) const{
+    std::vector<Cell*> adjCells = getAdjacentCells(x, y);
+    int count = 0;
+    for(const auto& cell : adjCells)
+    {
+        if (cell->population >= 1)
+        {
+            count++;
+        }
+        
+    }
+    
+    return count;
+}
+
 int Region::getAvailableGoods() const{
     return goods;
 }
