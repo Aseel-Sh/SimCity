@@ -60,8 +60,12 @@ void Region::printRegion() const {
     for (const auto& row : grid) {
         for (const auto& cell : row) {
             if(cell != nullptr)
-            {
-                std::cout << cell->zoneType << " "; //changed "." to "->" since its a ptr now
+            {   if (cell->population > 0)
+                {
+                    std::cout << cell->population << " "; //changed this to print population if there is any (like the ppt)
+                }else{
+                    std::cout << cell->zoneType << " "; //changed "." to "->" since its a ptr now
+                }
             }else{
                 std::cout << "  ";
             }
@@ -184,5 +188,81 @@ void Region::modifyAvailableWorkers(int count) {
     {
         workers = 0;
     }
+    
+}
+
+void Region::runSim(int timeLimit, int refreshRate){
+
+    int timeStep = 0;
+    int noChangesCount = 0;
+
+    while (timeStep < timeLimit && noChangesCount < 2)
+    {
+        bool changed = false;
+
+        for(auto& row : grid){
+            for (auto& cell : row)
+            {
+                if (cell != nullptr)
+                {
+                    int initPopulation = cell->population;
+
+                    cell->grow();
+
+                    // Track changes in population (add pollution tracking later)
+                    if (cell->population != initPopulation) 
+                    {
+                        changed = true;
+                        break; //if changed then stop growth for this timestep
+                    }
+                    
+                }
+            }
+            if (changed) break; //if changed then stop growth for this timestep
+        }
+
+        // Update the noChangesCount based on whether changes occurred
+        if (!changed)
+        {
+            noChangesCount++;
+        }else{
+            noChangesCount = 0;
+        }
+        
+        timeStep++;
+
+        //only prints if there is change and our curr step is a multiple of our refresh rate
+        if (changed && (timeStep % refreshRate == 0)) {
+            std::cout << "Time step " << timeStep << ":" << std::endl;
+            printRegion();
+            std::cout << "Available Workers: " << getAvailableWorkers() << std::endl;
+            std::cout << "Available Goods: " << getAvailableGoods() << std::endl;
+        }
+        
+    }
+    
+}
+
+void Region::printTotalPopulations() const{
+    int totalRes = 0;
+    int totalCom = 0;
+    int totalInd = 0;
+
+    for(auto& row : grid){
+        for (auto& cell : row)
+        {
+           if (cell != nullptr)
+           {    //since we might not have the char anymore Im using a dynamic cast to get type of object
+                if (dynamic_cast<Commercial*>(cell))
+                {
+                    totalCom += cell->population;
+                }
+                
+           }
+            
+        }
+    }
+    std::cout << "Total Commercial Population: " << totalCom<< std::endl;
+    //will add rest later
     
 }

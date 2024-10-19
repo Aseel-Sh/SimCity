@@ -15,7 +15,7 @@ void Commercial::grow(){
 
     if (this->population == 0)
     {
-        if (nearPowerline && availableWorkers >= 1 && availableGoods >= 1 || nearbyPopulatedCells >= 1 && availableWorkers >= 1 && availableGoods >= 1 )
+        if ((nearPowerline || nearbyPopulatedCells >= 1) && availableWorkers >= 1 && availableGoods >= 1)
         {
             this->population += 1;
             region->modifyAvailableGoods(-1);
