@@ -10,7 +10,7 @@ class Cell {
     public:
         // This represents the zone type of a cell, Residential, industrial and so on and its type char cause each zone is represented by such
         char zoneType;
-        int x,y, population, goods, workers;
+        int x,y, population;
         Region* region; //ptr to region so that i can access region funcs in my commercial class
         // This is the constructor that initilizes the zoneType when the Cell object is created
         Cell(char zoneType = '-', int x = 0, int y = 0, Region* region = nullptr); // defaults the place holder to roads
@@ -21,7 +21,7 @@ class Cell {
 
 class Region {
     private:
-        int rows, cols;
+        int rows, cols, goods, workers;
         // Created a grid of Cell type, Each cell represents an object or a unit such as a residential, industrial zone
         std::vector<std::vector<Cell*>> grid; //made it a pointer as opposed to the object itself - Aseel
 
@@ -38,8 +38,10 @@ class Region {
         std::vector<Cell*> getAdjacentCells(int x, int y) const;
         //shared funcs with all 3 zones
         bool adjToPowerline(int x, int y) const;
-        //int getAvailableWorkers() const;
-        //int getAvailableGoods() const;
+        int getAvailableWorkers() const;
+        int getAvailableGoods() const;
+        void modifyAvailableWorkers(int count); //Use a negative value to decrease (eg -1, -2..) or a positive value to increase (eg 1, 2..)
+        void modifyAvailableGoods(int count); 
         //int getAdjPopulation() const;
 
 

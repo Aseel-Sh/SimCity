@@ -145,3 +145,29 @@ bool Region::adjToPowerline(int x, int y) const {
     return false;
     
 }
+
+int Region::getAvailableGoods() const{
+    return goods;
+}
+
+int Region::getAvailableWorkers() const{
+    return workers;
+}
+
+void Region::modifyAvailableGoods(int count){
+    goods += count;
+    if (goods < 0) //making sure it doesnt become negative
+    {
+        goods = 0;
+    }
+    
+}
+
+void Region::modifyAvailableWorkers(int count) {
+    workers += count;
+    if (workers < 0)
+    {
+        workers = 0;
+    }
+    
+}
