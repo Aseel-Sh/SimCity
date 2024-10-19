@@ -5,7 +5,7 @@
 
 class Commercial : public Cell {
     public: 
-    Commercial() : Cell('C') {}
+    Commercial(int x, int y, Region* region);
     void grow() override; // this is the func that will override our base class's grow
 };
 

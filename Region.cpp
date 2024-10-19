@@ -7,7 +7,7 @@
 
 
 // Constructor for the cell the initilizes the zoneType
-Cell::Cell(char zoneType) : zoneType(zoneType) {}
+Cell::Cell(char zoneType, int x, int y, Region* region) : zoneType(zoneType), x(x), y(y), region(region) {}
 
 // Creates a 2d Vector grid with rows, where each row contains cols Cell objects
 Region::Region(int rows, int cols) : rows(rows), cols(cols), grid(rows, std::vector<Cell*>(cols)) {} //also changed this to ptr - Aseel
@@ -36,13 +36,13 @@ void Region::loadRegion(const std::string& fileName) {
             switch (zoneType)
             {
             case 'C':
-                grid[row][col] = new Commercial(); //create a commerical cell if zonetype is C
+                grid[row][col] = new Commercial(row, col, this); //create a commerical cell if zonetype is C, passes x,y and this region
                 break;
             case 'T':
             case '#':
             case 'P':
             case '-':
-                grid[row][col] = new OtherRegion(zoneType);
+                grid[row][col] = new OtherRegion(zoneType, row, col);
                 break;
             default:
                 grid[row][col] = nullptr;
@@ -99,7 +99,7 @@ void Region::getRegionSize(const std::string& fileName, int& rows, int& cols) {
     }
 }
 
-std::vector<Cell*> Region::getAdjacentCells(const std::vector<std::vector<Cell*>>& grid, int x, int y) const {
+std::vector<Cell*> Region::getAdjacentCells(int x, int y) const {
 
     int n  = grid.size(); //num of rows
 
@@ -131,4 +131,17 @@ std::vector<Cell*> Region::getAdjacentCells(const std::vector<std::vector<Cell*>
     
     return adjCells;
 
+}
+
+bool Region::adjToPowerline(int x, int y) const {
+    std::vector<Cell*> adjCells = getAdjacentCells(x, y);
+    for (const auto& cell : adjCells)
+    {
+        if (cell->zoneType == 'T' || cell->zoneType =='#')
+        {
+            return true;
+        }
+    }
+    return false;
+    
 }

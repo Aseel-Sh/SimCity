@@ -4,15 +4,16 @@
 #include <vector>
 #include <string>
 
+class Region; // have to declare region before class so that i can add the ptr in cell
+
 class Cell {
     public:
         // This represents the zone type of a cell, Residential, industrial and so on and its type char cause each zone is represented by such
         char zoneType;
-        int population;
-        int goods;
-        int workers;
+        int x,y, population, goods, workers;
+        Region* region; //ptr to region so that i can access region funcs in my commercial class
         // This is the constructor that initilizes the zoneType when the Cell object is created
-        Cell(char zoneType = '-'); // defaults the place holder to roads
+        Cell(char zoneType = '-', int x = 0, int y = 0, Region* region = nullptr); // defaults the place holder to roads
         virtual void grow()= 0; //the abstract grow func, will differ based on cell zone type
 
 
@@ -34,9 +35,9 @@ class Region {
         static void getRegionSize(const std::string& fileName, int& rows, int& cols);
 
         //a vector to store ptrs to the adj cells of curr cell
-        std::vector<Cell*> getAdjacentCells(const std::vector<std::vector<Cell*>>& grid, int x, int y) const;
+        std::vector<Cell*> getAdjacentCells(int x, int y) const;
         //shared funcs with all 3 zones
-        //bool hasPowerline() const;
+        bool adjToPowerline(int x, int y) const;
         //int getAvailableWorkers() const;
         //int getAvailableGoods() const;
         //int getAdjPopulation() const;
