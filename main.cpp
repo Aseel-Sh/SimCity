@@ -38,5 +38,7 @@ int main() {
 
     region.printTotalPopulations();
 
+    region.selectArea();
+
     return 0;
 }

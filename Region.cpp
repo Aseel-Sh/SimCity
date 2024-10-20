@@ -105,13 +105,11 @@ void Region::getRegionSize(const std::string& fileName, int& rows, int& cols) {
 
 std::vector<Cell*> Region::getAdjacentCells(int x, int y) const {
 
-    int n  = grid.size(); //num of rows
-
     std::vector<Cell*> adjCells;
 
     //deviation of row, checks rows up,curr,below. If there exists row above then set dx = -1 which will check that
     //else dx = 0, if dx not last row then set dx = 1 to check row below else set = 0
-    for (int dx = (x > 0 ? -1 : 0); dx <= (x < n - 1 ? 1 : 0); dx++)
+    for (int dx = (x > 0 ? -1 : 0); dx <= (x < rows - 1 ? 1 : 0); dx++)
     {
         //deviation of col, col to left? dy = -1 else dy = 0. not last col? dy = 1 else dy = 0
         for (int dy = (y > 0 ? -1 : 0); dy <= (y < grid[x + dx].size() ? 1 : 0); dy++)
@@ -122,8 +120,9 @@ std::vector<Cell*> Region::getAdjacentCells(int x, int y) const {
                 int newX = x + dx;
                 int newY = y + dy;
 
+
                 //since non uniform grid i have to check if the new coord is within bounds
-                if (newX >= 0 && newX < n && newY >= 0 && newY < grid[newX].size())
+                if (newX >= 0 && newX < rows && newY >= 0 && newY < grid[newX].size())
                 {
                     adjCells.push_back(grid[newX][newY]);
                 }
@@ -259,6 +258,80 @@ void Region::printTotalPopulations() const{
                 }
                 
            }
+            
+        }
+    }
+    std::cout << "Total Commercial Population: " << totalCom<< std::endl;
+    //will add rest later
+    
+}
+
+void Region::selectArea() const {
+    int x1, y1, x2, y2;
+
+    //ask user to select area
+    std::cout << "Please select an area:\nTop-left coordinate x: ";
+    std::cin >> x1;
+    std::cout << "Top-left coordinate y: ";
+    std::cin >> y1;
+    std::cout << "Bottom-right coordinate x: ";
+    std::cin >> x2;
+    std::cout << "Bottom-left coordinate y: ";
+    std::cin >> y2;
+
+    //check if the are is within our grid
+    while (x1 < 0 || y1 < 0 || x2 >= rows || y2 >= cols || x1 > x2 || y1 > y2) {
+        std::cout << "Out of bounds re-select an area:\nTop-left coordinate x: ";
+        std::cin >> x1;
+        std::cout << "Top-left coordinate y: ";
+        std::cin >> y1;
+        std::cout << "Bottom-right coordinate x: ";
+        std::cin >> x2;
+        std::cout << "Bottom-left coordinate y: ";
+        std::cin >> y2;
+    }
+
+    //print region (i didnt know how to reuse ronalds code for this. im sure there is a way but im lazy)
+    std:: cout << "Grid for (" << x1 << ", " << y1 << ") to ("<< x2 << ", " << y2 << "): \n";
+    for (int i = x1; i <= x2; i++)
+    {
+        for (int j = y1; j <= y2; j++)
+        {
+            Cell* cell = grid[i][j];
+            if (cell != nullptr)
+            {
+                if (cell->population > 0)
+                {
+                    std::cout << cell->population << " ";
+                }else{
+                    std::cout << cell->zoneType << " ";
+                }
+
+            }else{
+                std::cout << "  ";
+            }
+
+            
+        }
+        std::cout << std::endl;
+    }
+
+    //print total population for each region
+    int totalRes = 0;
+    int totalCom = 0;
+    int totalInd = 0;
+
+    for(int i = x1; i <= x2; i++){
+        for (int j = y1; j <= y2; j++)
+        {
+            Cell* cell = grid[i][j];
+            if (cell != nullptr)
+            {    //since we might not have the char anymore Im using a dynamic cast to get type of object
+                if (dynamic_cast<Commercial*>(cell))
+                {
+                    totalCom += cell->population;
+                }            
+            }
             
         }
     }

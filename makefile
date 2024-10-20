@@ -1,5 +1,5 @@
-simulation: main.o Config.o Region.o
-	g++ main.o Config.o Region.o -o simulation
+simulation: main.o Config.o Region.o Commercial.o
+	g++ main.o Config.o Region.o Commercial.o -o simulation
 
 main.o: main.cpp
 	g++ -c main.cpp

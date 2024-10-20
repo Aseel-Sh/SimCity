@@ -45,10 +45,12 @@ class Region {
         void modifyAvailableWorkers(int count); //Use a negative value to decrease (eg -1, -2..) or a positive value to increase (eg 1, 2..)
         void modifyAvailableGoods(int count); 
 
-        //this is basically gonna run the entire sim (grow and what now)
-        void runSim(int timeLimit, int refreshRate);
+        void runSim(int timeLimit, int refreshRate);//this is basically gonna run the entire sim (grow and what now)
 
         void printTotalPopulations() const; //the total for each region
+
+        //bonus output thingy
+        void selectArea() const;
 
 };
 
