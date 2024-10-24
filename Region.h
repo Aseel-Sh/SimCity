@@ -8,8 +8,11 @@ class Cell {
     public:
         // This represents the zone type of a cell, Residential, industrial and so on and its type char cause each zone is represented by such
         char zoneType;
-        // This is the constructor that initilizes the zoneType when the Cell object is created
-        Cell(char zoneType = '-'); // defaults the place holder to roads
+        // This is the constructor that initilizes the zoneType when the Cell object is created 
+        int population;
+        Cell(char zoneType = '-'); // defaults the place holder to roads 
+        
+
 
 };
 
