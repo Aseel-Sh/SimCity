@@ -9,38 +9,9 @@ class Residential: public Cell {
     public:
     // Constructor
     Residential(int x, int y, Region* region);
+    void grow() override; // grow override funct.
 
 
-    private:
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+};
 
 #endif // RESIDENTIAL_H
