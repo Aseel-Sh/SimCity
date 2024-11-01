@@ -13,6 +13,9 @@ Region.o: Region.cpp Region.h
 Commercial.o: Commercial.cpp Commercial.h
 	g++ -c Commercial.cpp
 
+Residential.o: Residential.cpp Residential.h
+	g++ -c Residential.cpp
+
 clean:
 	rm *.o simulation
 
