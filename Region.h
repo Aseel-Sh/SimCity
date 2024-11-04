@@ -39,7 +39,7 @@ class Region {
 
         //shared funcs with all 3 zones
         bool adjToPowerline(int x, int y) const;
-        int getCountPopulatedAdjCell(int x, int y) const; //gets how many adj cells have a population of >= 1
+        int getCountPopulatedAdjCell(int x, int y, int population) const; //gets how many adj cells have a population of >= 1
         int getAvailableWorkers() const;
         int getAvailableGoods() const;
         void modifyAvailableWorkers(int count); //Use a negative value to decrease (eg -1, -2..) or a positive value to increase (eg 1, 2..)

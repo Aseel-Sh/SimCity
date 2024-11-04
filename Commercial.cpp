@@ -11,7 +11,7 @@ void Commercial::grow(){
     bool nearPowerline = region->adjToPowerline(x, y);
     int availableWorkers = region->getAvailableWorkers();
     int availableGoods = region->getAvailableGoods();
-    int nearbyPopulatedCells = region->getCountPopulatedAdjCell(x, y);
+    int nearbyPopulatedCells = region->getCountPopulatedAdjCell(x, y, 0);
 
     if (this->population == 0)
     {
