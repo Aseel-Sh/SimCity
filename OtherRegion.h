@@ -5,7 +5,7 @@
 
 class OtherRegion : public Cell {
     public:
-    OtherRegion(char zoneType, int x, int y) : Cell(zoneType, x, y) {}
+    OtherRegion(char zoneType, int x, int y, Region* region) : Cell(zoneType, x, y, region) {}
     void grow() override {}
 };
 
