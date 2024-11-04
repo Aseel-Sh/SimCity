@@ -1,5 +1,6 @@
 #include "Region.h"
 #include "Commercial.h"
+#include "Residential.h"
 #include "OtherRegion.h"
 #include <fstream>
 #include <sstream>
@@ -37,6 +38,9 @@ void Region::loadRegion(const std::string& fileName) {
             {
             case 'C':
                 grid[row][col] = new Commercial(row, col, this); //create a commerical cell if zonetype is C, passes x,y and this region
+                break;
+            case 'R':
+                grid[row][col] = new Residential(row, col, this); //create a Residential cell if zonetype is R, passes x,y and this region
                 break;
             case 'T':
             case '#':
@@ -124,7 +128,9 @@ std::vector<Cell*> Region::getAdjacentCells(int x, int y) const {
                 //since non uniform grid i have to check if the new coord is within bounds
                 if (newX >= 0 && newX < rows && newY >= 0 && newY < grid[newX].size())
                 {
-                    adjCells.push_back(grid[newX][newY]);
+                    if (grid[newX][newY] != nullptr) { //make sure not nullptr
+                        adjCells.push_back(grid[newX][newY]);
+                    }               
                 }
                 
             }
@@ -252,7 +258,9 @@ void Region::printTotalPopulations() const{
         {
            if (cell != nullptr)
            {    //since we might not have the char anymore Im using a dynamic cast to get type of object
-                if (dynamic_cast<Commercial*>(cell))
+                if (dynamic_cast<Residential*>(cell)){ //add residential print
+                    totalRes += cell->population;
+                }else if (dynamic_cast<Commercial*>(cell))
                 {
                     totalCom += cell->population;
                 }
@@ -267,51 +275,40 @@ void Region::printTotalPopulations() const{
 }
 
 void Region::selectArea() const {
-    int x1, y1, x2, y2;
+    int x1, y1;
 
     //ask user to select area
     std::cout << "Please select an area:\nTop-left coordinate x: ";
     std::cin >> x1;
     std::cout << "Top-left coordinate y: ";
     std::cin >> y1;
-    std::cout << "Bottom-right coordinate x: ";
-    std::cin >> x2;
-    std::cout << "Bottom-left coordinate y: ";
-    std::cin >> y2;
 
     //check if the are is within our grid
-    while (x1 < 0 || y1 < 0 || x2 >= rows || y2 >= cols || x1 > x2 || y1 > y2) {
+    while (x1 < 0 || y1 < 0 || x1 >= rows || y1 >= cols) {
         std::cout << "Out of bounds re-select an area:\nTop-left coordinate x: ";
         std::cin >> x1;
         std::cout << "Top-left coordinate y: ";
         std::cin >> y1;
-        std::cout << "Bottom-right coordinate x: ";
-        std::cin >> x2;
-        std::cout << "Bottom-left coordinate y: ";
-        std::cin >> y2;
     }
 
     //print region (i didnt know how to reuse ronalds code for this. im sure there is a way but im lazy)
-    std:: cout << "Grid for (" << x1 << ", " << y1 << ") to ("<< x2 << ", " << y2 << "): \n";
-    for (int i = x1; i <= x2; i++)
-    {
-        for (int j = y1; j <= y2; j++)
-        {
-            Cell* cell = grid[i][j];
-            if (cell != nullptr)
-            {
-                if (cell->population > 0)
-                {
-                    std::cout << cell->population << " ";
-                }else{
-                    std::cout << cell->zoneType << " ";
+    std::cout << "Grid from (" << x1 << ", " << y1 << ") to (" << rows - 1 << ", " << cols - 1 << "):\n";
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (i < x1 || (i == x1 && j < y1)) {
+                std::cout << "  "; 
+            } else {
+                Cell* cell = grid[i][j];
+                if (cell != nullptr) {
+                    if (cell->population > 0) {
+                        std::cout << cell->population << " ";
+                    } else {
+                        std::cout << cell->zoneType << " ";
+                    }
+                } else {
+                    std::cout << "  ";
                 }
-
-            }else{
-                std::cout << "  ";
             }
-
-            
         }
         std::cout << std::endl;
     }
@@ -321,20 +318,23 @@ void Region::selectArea() const {
     int totalCom = 0;
     int totalInd = 0;
 
-    for(int i = x1; i <= x2; i++){
-        for (int j = y1; j <= y2; j++)
+    for(int i = x1; i < rows; i++){
+        for (int j = (i == x1 ? y1 : 0); j < cols; j++)
         {
             Cell* cell = grid[i][j];
             if (cell != nullptr)
             {    //since we might not have the char anymore Im using a dynamic cast to get type of object
-                if (dynamic_cast<Commercial*>(cell))
+                if (dynamic_cast<Residential*>(cell)){ //add residential print
+                    totalRes += cell->population;
+                }else if (dynamic_cast<Commercial*>(cell))
                 {
                     totalCom += cell->population;
-                }            
+                }     
             }
             
         }
     }
+    std::cout << "Total Residential Population: " << totalRes << std::endl;
     std::cout << "Total Commercial Population: " << totalCom<< std::endl;
     //will add rest later
     
