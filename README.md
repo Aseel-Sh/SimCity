@@ -39,3 +39,6 @@ Master branch changes:
 
 In order to now run the program, you can simply use make, and make run to compile, and make clean to get rid of all the object files.
 -Kyi 
+
+Note:
+ if using windows. to clean using makefile edit the makefile file's clean from "rm" to "del"
