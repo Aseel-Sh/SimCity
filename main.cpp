@@ -5,7 +5,7 @@
 int main() {
 
     std::string configFileName; // Variable to store config file name
-    std::cout << "Please provide the config file name." << std::endl;
+    std::cout << "Please provide the config file name: ";
     std::getline(std::cin, configFileName);
 
     // Loads the config from the config1 file and then out puts the data
