@@ -41,4 +41,4 @@ In order to now run the program, you can simply use make, and make run to compil
 -Kyi 
 
 Note:
- if using windows. to clean using makefile edit the makefile file's clean from "rm" to "del"
+ if using powershell terminal. to clean using makefile edit the makefile file's clean from "rm" to "del"
