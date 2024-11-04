@@ -34,5 +34,11 @@ int main() {
     std::cout << "Initial region state Time step 0:" << '\n';
     region.printRegion();
 
+    region.runSim(config.timeLimit, config.refreshRate);
+
+    region.printTotalPopulations();
+
+    region.selectArea();
+
     return 0;
 }
