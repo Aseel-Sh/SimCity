@@ -79,7 +79,7 @@ void Region::printRegion() const {
 }
 
 void Region::getRegionSize(const std::string& fileName, int& rows, int& cols) {
-    std::ifstream file(fileName);
+    std::ifstream file("./" + fileName);
     if (!file.is_open()) {
        std::cerr << "Error opening region file to find size" << '\n';
        return; 
