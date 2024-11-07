@@ -1,6 +1,7 @@
 #include "Region.h"
 #include "Commercial.h"
 #include "Residential.h"
+#include "Industrial.h"
 #include "OtherRegion.h"
 #include <fstream>
 #include <sstream>
@@ -42,6 +43,9 @@ void Region::loadRegion(const std::string& fileName) {
                 break;
             case 'R':
                 grid[row][col] = new Residential(row, col, this); //create a Residential cell if zonetype is R, passes x,y and this region
+                break;
+            case 'I':
+                grid[row][col] = new Industrial(row, col, this); //create a Industrial cell if zonetype is I, passes x,y and this region
                 break;
             case 'T':
             case '#':
@@ -311,6 +315,10 @@ void Region::printTotalPopulations() const{
            {    //since we might not have the char anymore Im using a dynamic cast to get type of object
                 if (dynamic_cast<Residential*>(cell)){ //add residential print
                     totalRes += cell->population;
+                }
+                else if (dynamic_cast<Industrial*>(cell))
+                {
+                    totalInd += cell->population;
                 }else if (dynamic_cast<Commercial*>(cell))
                 {
                     totalCom += cell->population;
@@ -322,6 +330,7 @@ void Region::printTotalPopulations() const{
     }
 
     std::cout << "Total Residential Population: " << totalRes<< std::endl;
+    std::cout << "Total Industrial Population: " << totalInd<< std::endl;
     std::cout << "Total Commercial Population: " << totalCom<< std::endl;
     //will add rest later
     

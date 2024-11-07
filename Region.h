@@ -13,7 +13,7 @@ class Cell {
         int x,y, population = 0, pollution = 0;
         Region* region; //ptr to region so that i can access region funcs in my commercial class
         // This is the constructor that initilizes the zoneType when the Cell object is created
-        Cell(char zoneType = '-', int x = 0, int y = 0, Region* region = nullptr); // defaults the place holder to roads
+        Cell(char zoneType = ' ', int x = 0, int y = 0, Region* region = nullptr); // defaults the place holder to roads
         virtual void grow()= 0; //the abstract grow func, will differ based on cell zone type
 
 
