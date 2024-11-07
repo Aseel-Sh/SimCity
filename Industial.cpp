@@ -1,38 +1,48 @@
 #include "Industrial.h"
+#include "Region.h"
 #include <iostream>
-#include <vector>
-
+#include <algorithm>
 using namespace std;
 
-
-bool isAdjacentToPowerline(const vector<vector<Cell>>& region, int x, int y) {
-    int directions[8][2] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
-    for (int i = 0; i < 8; i++) {
-        int newX = x + directions[i][0];
-        int newY = y + directions[i][1];
-        if (newX >= 0 && newX < region.size() && newY >= 0 && newY < region[0].size()) {
-            if (region[newX][newY].zoneType == 'T') { 
-                return true;
-            }
-        }
-    }
-    return false;
+Industrial::Industrial(int x, int y, Region* region) : Cell('I', x, y, region) {
+    this->population = 0; 
+    this->pollution = 0; 
 }
 
 
-bool growIndustrialZone(Cell& cell, const vector<vector<Cell>>& region, int x, int y, int& availableWorkers) {
-    if (cell.zoneType != 'I') return false; 
-    if (availableWorkers < 2) return false; 
-
+void Industrial::grow() {
+    int availableWorkers = region->getAvailableWorkers();
     
-    if (isAdjacentToPowerline(region, x, y) || cell.population > 0) {
+    
+    if (population == 0 && region->adjToPowerline(x, y) && availableWorkers >= 2) {
+        population++;
+        region->modifyAvailableWorkers(-2); 
+    } else {
+        int populatedAdjCells = region->getCountPopulatedAdjCell(x, y);
         
-        if (cell.population == 0 && availableWorkers >= 2) {
-            cell.population++;
-            availableWorkers -= 2;
-            return true;
+        
+        if (population == 0 && populatedAdjCells >= 1 && availableWorkers >= 2) {
+            population++;
+            region->modifyAvailableWorkers(-2);
+        } else if (population == 1 && populatedAdjCells >= 2 && availableWorkers >= 2) {
+            population++;
+            region->modifyAvailableWorkers(-2);
+        } else if (population == 2 && populatedAdjCells >= 4 && availableWorkers >= 2) {
+            population++;
+            region->modifyAvailableWorkers(-2);
         }
     }
-    return false;
+}
+
+
+void Industrial::spreadPollution() {
+    int pollutionAmount = population; 
+    vector<Cell*> adjacentCells = region->getAdjacentCells(x, y);
+    
+    for (Cell* adjCell : adjacentCells) {
+        if (adjCell) {
+            adjCell->pollution += max(0, pollutionAmount - 1); 
+        }
+    }
 }
 

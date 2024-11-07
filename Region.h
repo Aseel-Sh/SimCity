@@ -10,7 +10,7 @@ class Cell {
     public:
         // This represents the zone type of a cell, Residential, industrial and so on and its type char cause each zone is represented by such
         char zoneType;
-        int x,y, population = 0;
+        int x,y, population = 0, pollution = 0;
         Region* region; //ptr to region so that i can access region funcs in my commercial class
         // This is the constructor that initilizes the zoneType when the Cell object is created
         Cell(char zoneType = '-', int x = 0, int y = 0, Region* region = nullptr); // defaults the place holder to roads
