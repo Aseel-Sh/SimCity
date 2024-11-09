@@ -15,28 +15,32 @@ void Industrial::grow() {
         int availableGoods = region->getAvailableGoods();
         
         if (availableGoods == 0){
-        if (population == 0 && region->adjToPowerline(x, y) && availableWorkers >= 2) {
-            population++;
-            region->modifyAvailableWorkers(-2); 
-            region->modifyAvailableGoods(1); 
-        } else {
-            int populatedAdjCells = region->getCountPopulatedAdjCell(x, y);
-            
-            
-            if (population == 0 && populatedAdjCells >= 1 && availableWorkers >= 2) {
+            if (population == 0 && region->adjToPowerline(x, y) && availableWorkers >= 2) {
                 population++;
-                region->modifyAvailableWorkers(-2);
+                region->modifyAvailableWorkers(-2); 
                 region->modifyAvailableGoods(1); 
-            } else if (population == 1 && populatedAdjCells >= 2 && availableWorkers >= 2) {
-                population++;
-                region->modifyAvailableWorkers(-2);
-                region->modifyAvailableGoods(1); 
-            } else if (population == 2 && populatedAdjCells >= 4 && availableWorkers >= 2) {
-                population++;
-                region->modifyAvailableWorkers(-2);
-                region->modifyAvailableGoods(1); 
+                spreadPollution();
+            } else {
+                int populatedAdjCells = region->getCountPopulatedAdjCell(x, y);
+                
+                
+                if (population == 0 && populatedAdjCells >= 1 && availableWorkers >= 2) {
+                    population++;
+                    region->modifyAvailableWorkers(-2);
+                    region->modifyAvailableGoods(1); 
+                    spreadPollution();
+                } else if (population == 1 && populatedAdjCells >= 2 && availableWorkers >= 2) {
+                    population++;
+                    region->modifyAvailableWorkers(-2);
+                    region->modifyAvailableGoods(1); 
+                    spreadPollution();
+                } else if (population == 2 && populatedAdjCells >= 4 && availableWorkers >= 2) {
+                    population++;
+                    region->modifyAvailableWorkers(-2);
+                    region->modifyAvailableGoods(1); 
+                    spreadPollution();
+                }
             }
-        }
         }
 }
 

@@ -45,8 +45,7 @@ class Region {
         void modifyAvailableWorkers(int count); //Use a negative value to decrease (eg -1, -2..) or a positive value to increase (eg 1, 2..)
         void modifyAvailableGoods(int count); 
         int getTotalAdjacentPopulation(int x, int y) const;
-        static bool growthPriority(const Cell* a, const Cell* b);
-
+        
         void runSim(int timeLimit, int refreshRate);//this is basically gonna run the entire sim (grow and what now)
 
         void printTotalPopulations() const; //the total for each region
