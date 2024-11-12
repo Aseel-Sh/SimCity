@@ -10,10 +10,10 @@ class Cell {
     public:
         // This represents the zone type of a cell, Residential, industrial and so on and its type char cause each zone is represented by such
         char zoneType;
-        int x,y, population = 0;
+        int x,y, population = 0, pollution = 0;
         Region* region; //ptr to region so that i can access region funcs in my commercial class
         // This is the constructor that initilizes the zoneType when the Cell object is created
-        Cell(char zoneType = '-', int x = 0, int y = 0, Region* region = nullptr); // defaults the place holder to roads
+        Cell(char zoneType = ' ', int x = 0, int y = 0, Region* region = nullptr); // defaults the place holder to roads
         virtual void grow()= 0; //the abstract grow func, will differ based on cell zone type
 
 
@@ -45,8 +45,7 @@ class Region {
         void modifyAvailableWorkers(int count); //Use a negative value to decrease (eg -1, -2..) or a positive value to increase (eg 1, 2..)
         void modifyAvailableGoods(int count); 
         int getTotalAdjacentPopulation(int x, int y) const;
-        static bool growthPriority(const Cell* a, const Cell* b);
-
+        
         void runSim(int timeLimit, int refreshRate);//this is basically gonna run the entire sim (grow and what now)
 
         void printTotalPopulations() const; //the total for each region

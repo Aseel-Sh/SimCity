@@ -2,11 +2,18 @@
 #define INDUSTRIAL_H
 
 #include "Region.h" 
-#include <vector> 
-using namespace std;
+#include <vector>
 
-// Function declarations
-bool growIndustrialZone(Cell& cell, const vector<vector<Cell>>& region, int x, int y, int& availableWorkers);
 
+class Industrial : public Cell {
+public:
+    Industrial(int x, int y, Region* region);
+    
+   
+    void grow() override;
+    
+   
+    void spreadPollution();
+};
 
 #endif // INDUSTRIAL_H
