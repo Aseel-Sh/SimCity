@@ -156,12 +156,12 @@ bool Region::adjToPowerline(int x, int y) const {
     
 }
 
-int Region:: getCountPopulatedAdjCell(int x, int y) const{
+int Region::getCountPopulatedAdjCell(int x, int y, int population) const{
     std::vector<Cell*> adjCells = getAdjacentCells(x, y);
     int count = 0;
     for(const auto& cell : adjCells)
     {
-        if (cell->population >= 1)
+        if (cell->population >= population)
         {
             count++;
         }
@@ -391,4 +391,19 @@ void Region::selectArea() const {
     std::cout << "Total Commercial Population: " << totalCom<< std::endl;
     //will add rest later
     
+} 
+
+int Region::getRows() const {
+    return rows;
+}
+
+int Region::getCols() const {
+    return cols;
+} 
+
+Cell* Region::getCell(int x, int y) const {
+    if (x >= 0 && x < rows && y >= 0 && y < cols) {
+        return grid[x][y];
+    }
+    return nullptr;
 }

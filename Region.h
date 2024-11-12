@@ -35,11 +35,15 @@ class Region {
         static void getRegionSize(const std::string& fileName, int& rows, int& cols);
 
         //a func to get the adj cells of curr cell
-        std::vector<Cell*> getAdjacentCells(int x, int y) const;
+        std::vector<Cell*> getAdjacentCells(int x, int y) const; 
+
+         int getRows() const;
+        int getCols() const; 
+        Cell* getCell(int x, int y) const;
 
         //shared funcs with all 3 zones
         bool adjToPowerline(int x, int y) const;
-        int getCountPopulatedAdjCell(int x, int y) const; //gets how many adj cells have a population of >= 1
+        int getCountPopulatedAdjCell(int x, int y, int population) const; //gets how many adj cells have a population of >= 1
         int getAvailableWorkers() const;
         int getAvailableGoods() const;
         void modifyAvailableWorkers(int count); //Use a negative value to decrease (eg -1, -2..) or a positive value to increase (eg 1, 2..)
