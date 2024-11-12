@@ -161,12 +161,12 @@ bool Region::adjToPowerline(int x, int y) const {
     
 }
 
-int Region:: getCountPopulatedAdjCell(int x, int y) const{
+int Region::getCountPopulatedAdjCell(int x, int y, int population) const{
     std::vector<Cell*> adjCells = getAdjacentCells(x, y);
     int count = 0;
     for(const auto& cell : adjCells)
     {
-        if (cell->population >= 1)
+        if (cell->population >= population)
         {
             count++;
         }
