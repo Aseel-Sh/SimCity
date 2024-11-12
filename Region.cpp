@@ -1,6 +1,7 @@
 #include "Region.h"
 #include "Commercial.h"
 #include "Residential.h"
+#include "Industrial.h"
 #include "OtherRegion.h"
 #include <fstream>
 #include <sstream>
@@ -43,6 +44,9 @@ void Region::loadRegion(const std::string& fileName) {
             case 'R':
                 grid[row][col] = new Residential(row, col, this); //create a Residential cell if zonetype is R, passes x,y and this region
                 break;
+            case 'I':
+                grid[row][col] = new Industrial(row, col, this); //create a Industrial cell if zonetype is I, passes x,y and this region
+                break;
             case 'T':
             case '#':
             case 'P':
@@ -71,6 +75,7 @@ void Region::printRegion() const {
                 }else{
                     std::cout << cell->zoneType << " "; //changed "." to "->" since its a ptr now
                 }
+
             }else{
                 std::cout << "  ";
             }
@@ -208,42 +213,6 @@ int Region::getTotalAdjacentPopulation(int x, int y) const {
     return totalPopulation;
 }
 
-//this is a custom comparator basically a function that determiness the order
-//of the element based on the priority i set (https://www.geeksforgeeks.org/comparator-in-cpp/)
-bool Region::growthPriority(const Cell* a, const Cell* b){
-    //commerical over industrial priority
-    if (dynamic_cast<const Commercial*>(a) && !dynamic_cast<const Commercial*>(b)) 
-    {
-         return true; //if a is a commerican then a has priority
-    }
-    if (!dynamic_cast<const Commercial*>(a) && dynamic_cast<const Commercial*>(b))
-    {
-        return false; //if a is not commerical then b has priority
-    }
-
-    //larger population first
-    if (a->population != b->population)
-    {
-        return a->population > b->population; //returns true if a pop > b pop
-    }
-
-    //greater total adj pop first
-    int adjPopA = a->region->getTotalAdjacentPopulation(a->x, a->y); //get total adj pop of a and b
-    int adjPopB = b->region->getTotalAdjacentPopulation(b->x, b->y);
-    if (adjPopA != adjPopB) 
-    {
-        return adjPopA > adjPopB; //give priority to whichever is higher
-    }
-
-    //smaller y first
-    if (a->y != b->y) 
-    {
-        return a->y < b->y;
-    }
-
-    //smaller x first
-    return a->x < b->x;
-}
 
 void Region::runSim(int timeLimit, int refreshRate){
 
@@ -253,28 +222,26 @@ void Region::runSim(int timeLimit, int refreshRate){
     while (timeStep < timeLimit && noChangesCount < 2)
     {
         bool changed = false;
-        std::vector<Cell*> growableCells;
 
-        //put all growable (not nullptr) cells in a vector
-        for (auto& row : grid) {
-            for (auto& cell : row) {
-                if (cell != nullptr) {
-                    growableCells.push_back(cell);
+        for(auto& row : grid){
+            for (auto& cell : row)
+            {
+                if (cell != nullptr)
+                {
+                    int initPopulation = cell->population;
+
+                    cell->grow();
+
+                    // Track changes in population (add pollution tracking later)
+                    if (cell->population != initPopulation) 
+                    {
+                        changed = true;
+                        break; //if changed then stop growth for this timestep
+                    }
+                    
                 }
             }
-        }
-
-        std::sort(growableCells.begin(), growableCells.end(), Region::growthPriority); //sort based on priority i made
-
-        for (auto& cell : growableCells) {
-            int initPopulation = cell->population;
-            cell->grow();
-
-            // Track changes in population (add pollution tracking later)
-            if (cell->population != initPopulation) {
-                changed = true;
-                break; // stop growth for this timestep once a change is made
-            }
+            if (changed) break; //if changed then stop growth for this timestep
         }
 
         // Update the noChangesCount based on whether changes occurred
@@ -299,6 +266,7 @@ void Region::runSim(int timeLimit, int refreshRate){
     
 }
 
+
 void Region::printTotalPopulations() const{
     int totalRes = 0;
     int totalCom = 0;
@@ -311,6 +279,10 @@ void Region::printTotalPopulations() const{
            {    //since we might not have the char anymore Im using a dynamic cast to get type of object
                 if (dynamic_cast<Residential*>(cell)){ //add residential print
                     totalRes += cell->population;
+                }
+                else if (dynamic_cast<Industrial*>(cell))
+                {
+                    totalInd += cell->population;
                 }else if (dynamic_cast<Commercial*>(cell))
                 {
                     totalCom += cell->population;
@@ -322,6 +294,7 @@ void Region::printTotalPopulations() const{
     }
 
     std::cout << "Total Residential Population: " << totalRes<< std::endl;
+    std::cout << "Total Industrial Population: " << totalInd<< std::endl;
     std::cout << "Total Commercial Population: " << totalCom<< std::endl;
     //will add rest later
     
@@ -379,6 +352,10 @@ void Region::selectArea() const {
             {    //since we might not have the char anymore Im using a dynamic cast to get type of object
                 if (dynamic_cast<Residential*>(cell)){ //add residential print
                     totalRes += cell->population;
+                }
+                else if (dynamic_cast<Industrial*>(cell))
+                {
+                    totalInd += cell->population;
                 }else if (dynamic_cast<Commercial*>(cell))
                 {
                     totalCom += cell->population;
