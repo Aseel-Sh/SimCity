@@ -24,30 +24,35 @@ void Industrial::grow() {
         if ((nearPowerline || nearbyPopulatedCells >= 1) && availableWorkers >= 2) {
             this->population++;
             region->modifyAvailableWorkers(-2);
+            spreadPollution();
         }
     } else if (this->population == 1) {
         int nearbyPopulatedCells = region->getCountPopulatedAdjCell(x, y, 1);
         if (nearbyPopulatedCells >= 2 && availableWorkers >= 2) {
             this->population++;
             region->modifyAvailableWorkers(-2);
+            spreadPollution();
         }
     } else if (this->population == 2) {
         int nearbyPopulatedCells = region->getCountPopulatedAdjCell(x, y, 2);
         if (nearbyPopulatedCells >= 4 && availableWorkers >= 2) {
             this->population++;
             region->modifyAvailableWorkers(-2);
+            spreadPollution();
         }
     } else if (this->population == 3) {
         int nearbyPopulatedCells = region->getCountPopulatedAdjCell(x, y, 3);
         if (nearbyPopulatedCells >= 6 && availableWorkers >= 2) {
             this->population++;
             region->modifyAvailableWorkers(-2);
+            spreadPollution();
         }
     } else if (this->population == 4) {
         int nearbyPopulatedCells = region->getCountPopulatedAdjCell(x, y, 4);
         if (nearbyPopulatedCells >= 8 && availableWorkers >= 2) {
             this->population++;
             region->modifyAvailableWorkers(-2);
+            spreadPollution();
         }
     } 
 

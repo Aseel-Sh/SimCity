@@ -7,6 +7,7 @@
 #include <sstream>
 #include <iostream>
 #include <algorithm>
+#include <iomanip> 
 
 
 // Constructor for the cell the initilizes the zoneType
@@ -81,6 +82,34 @@ void Region::printRegion() const {
             }
         }
         std::cout << '\n';
+    }
+}
+
+void Region::printRegionPollution() const {
+    const int cellWidth = 6; 
+
+    std::cout << "--------------------------------------\n";
+    std::cout << "Pollution Final State: \n\n";
+
+    for (const auto& row : grid) {
+        for (const auto& cell : row) {
+            if (cell != nullptr) {
+                if (cell->population > 0) {
+                    std::cout << std::setw(cellWidth - 3) << cell->population; 
+                } else {
+                    std::cout << std::setw(cellWidth - 3) << cell->zoneType; 
+                }
+
+                if (cell->pollution > 0) {
+                    std::cout << "(" << cell->pollution << ")";
+                } else {
+                    std::cout << "   "; 
+                }
+            } else {
+                std::cout << std::setw(cellWidth) << " ";
+            }
+        }
+        std::cout << '\n'; 
     }
 }
 
@@ -364,7 +393,8 @@ void Region::selectArea() const {
             
         }
     }
-    std::cout << "Total Residential Population: " << totalRes << std::endl;
+    std::cout << "Total Residential Population: " << totalRes<< std::endl;
+    std::cout << "Total Industrial Population: " << totalInd<< std::endl;
     std::cout << "Total Commercial Population: " << totalCom<< std::endl;
     //will add rest later
     

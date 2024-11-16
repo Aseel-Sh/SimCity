@@ -37,7 +37,7 @@ class Region {
         //a func to get the adj cells of curr cell
         std::vector<Cell*> getAdjacentCells(int x, int y) const; 
 
-         int getRows() const;
+        int getRows() const;
         int getCols() const; 
         Cell* getCell(int x, int y) const;
 
@@ -51,6 +51,7 @@ class Region {
         int getTotalAdjacentPopulation(int x, int y) const;
         
         void runSim(int timeLimit, int refreshRate);//this is basically gonna run the entire sim (grow and what now)
+        void printRegionPollution() const;
 
         void printTotalPopulations() const; //the total for each region
 

@@ -37,6 +37,7 @@ int main() {
     region.runSim(config.timeLimit, config.refreshRate);
 
     region.printTotalPopulations();
+    region.printRegionPollution();
 
     region.selectArea();
 
