@@ -4,6 +4,10 @@
 
 Commercial::Commercial(int x, int y, Region* region) : Cell('C', x, y, region) {}
 
+Commercial* Commercial::clone() const {
+        return new Commercial(*this);
+}
+
 void Commercial::grow(){
     int x = this->x;
     int y = this->y;

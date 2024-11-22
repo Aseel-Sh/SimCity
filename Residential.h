@@ -10,7 +10,7 @@ class Residential: public Cell {
     // Constructor
     Residential(int x, int y, Region* region);
     void grow() override; // grow override funct.
-
+    virtual Residential* clone() const override;
 
 };
 

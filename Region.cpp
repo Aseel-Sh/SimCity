@@ -16,6 +16,20 @@ Cell::Cell(char zoneType, int x, int y, Region* region) : zoneType(zoneType), x(
 // Creates a 2d Vector grid with rows, where each row contains cols Cell objects
 Region::Region(int rows, int cols) : rows(rows), cols(cols), grid(rows, std::vector<Cell*>(cols)) {} //also changed this to ptr - Aseel
 
+std::vector<std::vector<Cell*>> Region::cloneGrid() const {
+    std::vector<std::vector<Cell*>> clonedGrid(rows, std::vector<Cell*>(cols, nullptr));
+
+    for (int row = 0; row < rows; ++row) {
+        for (int col = 0; col < cols; ++col) {
+            if (grid[row][col] != nullptr) {
+                clonedGrid[row][col] = grid[row][col]->clone();
+            }
+        }
+    }
+
+    return clonedGrid;
+}
+
 // This reads the file and extracts the data from the csv file
 void Region::loadRegion(const std::string& fileName) {
     std::ifstream regionFile(fileName);
@@ -333,7 +347,7 @@ void Region::printTotalPopulations() const{
     
 }
 
-void Region::selectArea() const {
+void Region::selectArea(std::vector<std::vector<Cell*>> clonedGrid, int timeLimit, int refreshRate) const {
     int x1, y1;
 
     //ask user to select area
@@ -350,58 +364,36 @@ void Region::selectArea() const {
         std::cin >> y1;
     }
 
-    //print region (i didnt know how to reuse ronalds code for this. im sure there is a way but im lazy)
-    std::cout << "Grid from (" << x1 << ", " << y1 << ") to (" << rows - 1 << ", " << cols - 1 << "):\n";
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            if (i < x1 || (i == x1 && j < y1)) {
-                std::cout << "  "; 
-            } else {
-                Cell* cell = grid[i][j];
-                if (cell != nullptr) {
-                    if (cell->population > 0) {
-                        std::cout << cell->population << " ";
-                    } else {
-                        std::cout << cell->zoneType << " ";
-                    }
-                } else {
-                    std::cout << "  ";
-                }
+    int newRows = rows - x1;
+    int newCols = cols - y1;
+
+    Region* subRegion = new Region(newRows, newCols);
+
+    for (int i = x1; i < rows; ++i) {
+        for (int j = y1; j < cols; ++j) {
+            if (clonedGrid[i][j] != nullptr) {
+                subRegion->grid[i - x1][j - y1] = clonedGrid[i][j]->clone();
             }
         }
-        std::cout << std::endl;
     }
 
-    //print total population for each region
-    int totalRes = 0;
-    int totalCom = 0;
-    int totalInd = 0;
-
-    for(int i = x1; i < rows; i++){
-        for (int j = (i == x1 ? y1 : 0); j < cols; j++)
-        {
-            Cell* cell = grid[i][j];
-            if (cell != nullptr)
-            {    //since we might not have the char anymore Im using a dynamic cast to get type of object
-                if (dynamic_cast<Residential*>(cell)){ //add residential print
-                    totalRes += cell->population;
-                }
-                else if (dynamic_cast<Industrial*>(cell))
-                {
-                    totalInd += cell->population;
-                }else if (dynamic_cast<Commercial*>(cell))
-                {
-                    totalCom += cell->population;
-                }     
-            }
-            
+    //delete old cloned grid to stop memory leaks
+    for (auto& row : clonedGrid) {
+        for (auto& cell : row) {
+            delete cell;
         }
     }
-    std::cout << "Total Residential Population: " << totalRes<< std::endl;
-    std::cout << "Total Industrial Population: " << totalInd<< std::endl;
-    std::cout << "Total Commercial Population: " << totalCom<< std::endl;
-    //will add rest later
-    
+
+    std::cout << "Initial sub-region state (Time step 0):" << std::endl;
+    subRegion->printRegion();
+
+    subRegion->runSim(timeLimit, refreshRate);
+
+    subRegion->printTotalPopulations();
+    subRegion->printRegionPollution();
+
+    delete subRegion;
+
 } 
 
 int Region::getRows() const {
