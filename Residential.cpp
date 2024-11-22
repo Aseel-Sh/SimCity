@@ -5,6 +5,10 @@
 
 Residential::Residential(int x, int y, Region* region) : Cell('R', x, y, region) {} // Default Constructor
 
+Residential* Residential::clone() const {
+        return new Residential(*this);
+}
+
 void Residential::grow() {
     int population;
     bool nearPowerline = region->adjToPowerline(x,y); // funct. to check adj to powerline for initial population growth

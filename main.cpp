@@ -30,6 +30,7 @@ int main() {
 
     // Loads the initial region layout from the region 1 file
     region.loadRegion(config.regionFile);
+    std::vector<std::vector<Cell*>> clonedGrid = region.cloneGrid();
 
     std::cout << "Initial region state Time step 0:" << '\n';
     region.printRegion();
@@ -39,7 +40,7 @@ int main() {
     region.printTotalPopulations();
     region.printRegionPollution();
 
-    region.selectArea();
+    region.selectArea(clonedGrid, config.timeLimit, config.refreshRate);
 
     return 0;
 }

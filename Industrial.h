@@ -11,7 +11,7 @@ public:
     
    
     void grow() override;
-    
+    virtual Industrial* clone() const override;
     
    
     void spreadPollution();

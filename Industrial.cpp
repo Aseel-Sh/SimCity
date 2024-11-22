@@ -13,6 +13,9 @@ Industrial::Industrial(int x, int y, Region* region) : Cell('I', x, y, region) {
     this->pollution = 0; 
 }
 
+Industrial* Industrial::clone() const {
+        return new Industrial(*this);
+}
 
 void Industrial::grow() {
     bool nearPowerline = region->adjToPowerline(x, y);

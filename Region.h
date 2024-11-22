@@ -15,6 +15,7 @@ class Cell {
         // This is the constructor that initilizes the zoneType when the Cell object is created
         Cell(char zoneType = ' ', int x = 0, int y = 0, Region* region = nullptr); // defaults the place holder to roads
         virtual void grow()= 0; //the abstract grow func, will differ based on cell zone type
+        virtual Cell* clone() const = 0;
 
 
 };
@@ -56,7 +57,8 @@ class Region {
         void printTotalPopulations() const; //the total for each region
 
         //bonus output thingy
-        void selectArea() const;
+        std::vector<std::vector<Cell*>> cloneGrid() const;
+        void selectArea(std::vector<std::vector<Cell*>> clonedGrid, int timeLimit, int refreshRate) const;
 
 };
 
