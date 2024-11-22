@@ -16,7 +16,7 @@ Alternatively, you can run `g++ *.cpp -o simulation` to run the program, though 
 
 Additionally, we implemented the bonus aswell.
 
-# SimCity: A City Simulation Project
+---
 
 **SimCity** is a city simulation project that models the behavior and interactions of various urban zones—Residential, Commercial, and Industrial—within an evolving city environment.
 
