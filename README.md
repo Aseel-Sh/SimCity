@@ -88,7 +88,7 @@ Additionally, we implemented the bonus aswell.
   - Available resources.
   - Adjacency conditions.
   - Growth rules.
-- Pollution spreads dynamically from Industrial zones, influencing adjacent cells.
+- Pollution spreads from Industrial zones, influencing adjacent cells.
 - At specified refresh intervals, the current city state is printed.
 
 ### Resource and Growth Conditions
