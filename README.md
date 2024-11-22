@@ -56,6 +56,7 @@ Additionally, we implemented the bonus aswell.
 - **`Residential.cpp` and `Residential.h`**: Models Residential zone behavior and growth rules.
 - **`Commercial.cpp` and `Commercial.h`**: Models Commercial zone behavior and growth rules.
 - **`Industrial.cpp` and `Industrial.h`**: Models Industrial zone behavior, growth rules, and pollution management.
+- **`OtherRegion.h`**: Class to handle other regions.
 
 ### Configuration Files
 1. **`config1.txt`**
