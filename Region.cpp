@@ -87,6 +87,7 @@ void Region::printRegion() const {
 
 void Region::printRegionPollution() const {
     const int cellWidth = 6; 
+    int totalpoll = 0;
 
     std::cout << "--------------------------------------\n";
     std::cout << "Pollution Final State: \n\n";
@@ -102,6 +103,7 @@ void Region::printRegionPollution() const {
 
                 if (cell->pollution > 0) {
                     std::cout << "(" << cell->pollution << ")";
+                    totalpoll+= cell->pollution;
                 } else {
                     std::cout << "   "; 
                 }
@@ -109,8 +111,10 @@ void Region::printRegionPollution() const {
                 std::cout << std::setw(cellWidth) << " ";
             }
         }
-        std::cout << '\n'; 
+        std::cout << std::endl << std::endl;
     }
+    std::cout <<"Total Pollution: "<< totalpoll << std::endl;
+    std::cout << "--------------------------------------\n\n";
 }
 
 void Region::getRegionSize(const std::string& fileName, int& rows, int& cols) {
@@ -288,7 +292,7 @@ void Region::runSim(int timeLimit, int refreshRate){
             std::cout << "Time step " << timeStep << ":" << std::endl;
             printRegion();
             std::cout << "Available Workers: " << getAvailableWorkers() << std::endl;
-            std::cout << "Available Goods: " << getAvailableGoods() << std::endl;
+            std::cout << "Available Goods: " << getAvailableGoods() << std::endl<<std::endl;
         }
         
     }
