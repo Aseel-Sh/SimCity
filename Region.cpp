@@ -213,7 +213,7 @@ int Region::getCountPopulatedAdjCell(int x, int y, int population) const{
     int count = 0;
     for(const auto& cell : adjCells)
     {
-        if (cell->population >= population)
+        if (cell->population > 0 && cell->population >= population)
         {
             count++;
         }
