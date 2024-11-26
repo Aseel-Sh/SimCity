@@ -283,12 +283,25 @@ void Region::runSim(int timeLimit, int refreshRate){
                     if (cell->population != initPopulation) 
                     {
                         changed = true;
-                        break; //if changed then stop growth for this timestep
+
+                        timeStep++;
+
+                        if (timeStep % refreshRate == 0) {
+                            std::cout << "Time step " << timeStep << ":" << std::endl;
+                            printRegion();
+                            std::cout << "Available Workers: " << getAvailableWorkers() << std::endl;
+                            std::cout << "Available Goods: " << getAvailableGoods() << std::endl<<std::endl;
+
+                            if (timeStep >= timeLimit)
+                            {
+                                return;
+                            }
+                            
+                        }
                     }
                     
                 }
             }
-            if (changed) break; //if changed then stop growth for this timestep
         }
 
         // Update the noChangesCount based on whether changes occurred
@@ -299,15 +312,6 @@ void Region::runSim(int timeLimit, int refreshRate){
             noChangesCount = 0;
         }
         
-        timeStep++;
-
-        //only prints if there is change and our curr step is a multiple of our refresh rate
-        if (changed && (timeStep % refreshRate == 0)) {
-            std::cout << "Time step " << timeStep << ":" << std::endl;
-            printRegion();
-            std::cout << "Available Workers: " << getAvailableWorkers() << std::endl;
-            std::cout << "Available Goods: " << getAvailableGoods() << std::endl<<std::endl;
-        }
         
     }
     
