@@ -16,7 +16,7 @@ int main() {
     std::cout << "Time Limit: " << config.timeLimit << '\n';
     std::cout << "Refresh Rate: " << config.refreshRate << '\n';
 
-    // Need to start up the region based on the rows and columns
+    // start up the region based on the rows and columns
     int rows = 0, cols = 0;
     Region::getRegionSize(config.regionFile, rows, cols);
 
@@ -30,16 +30,19 @@ int main() {
 
     // Loads the initial region layout from the region 1 file
     region.loadRegion(config.regionFile);
-    std::vector<std::vector<Cell*>> clonedGrid = region.cloneGrid();
+    std::vector<std::vector<Cell*>> clonedGrid = region.cloneGrid(); //Clone initial grid for SelectArea()
 
     std::cout << "Initial region state Time step 0:" << '\n';
     region.printRegion();
 
+    //run the simulation using the time limit and refresh rate from the configuration
     region.runSim(config.timeLimit, config.refreshRate);
 
+    //dispay metrics
     region.printTotalPopulations();
     region.printRegionPollution();
 
+    //user-defined selection and analysis of an area in the cloned grid (bonus)
     region.selectArea(clonedGrid, config.timeLimit, config.refreshRate);
 
     return 0;

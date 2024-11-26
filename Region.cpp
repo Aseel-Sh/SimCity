@@ -13,15 +13,17 @@
 // Constructor for the cell the initilizes the zoneType
 Cell::Cell(char zoneType, int x, int y, Region* region) : zoneType(zoneType), x(x), y(y), region(region) {}
 
-// Creates a 2d Vector grid with rows, where each row contains cols Cell objects
-Region::Region(int rows, int cols) : rows(rows), cols(cols), grid(rows, std::vector<Cell*>(cols)) {} //also changed this to ptr - Aseel
+// Constructor for the Region class creates a 2D grid of pointers to Cell objects
+Region::Region(int rows, int cols) : rows(rows), cols(cols), grid(rows, std::vector<Cell*>(cols)) {}
 
+//clones the current grid to create a deep copy of all Cell objects
 std::vector<std::vector<Cell*>> Region::cloneGrid() const {
     std::vector<std::vector<Cell*>> clonedGrid(rows, std::vector<Cell*>(cols, nullptr));
 
     for (int row = 0; row < rows; ++row) {
         for (int col = 0; col < cols; ++col) {
             if (grid[row][col] != nullptr) {
+                 //cloning each cell to ensure the new grid has independent objects
                 clonedGrid[row][col] = grid[row][col]->clone();
             }
         }
@@ -41,15 +43,13 @@ void Region::loadRegion(const std::string& fileName) {
     std::string line;
     int row = 0;
 
-    // Parses thru each line and creates the zoneType based of the letter or content it pulls in
+    // Parses through each line and creates the zoneType based of the letter or content it pulls in
     while (std::getline(regionFile, line) && row < rows) {
         std::stringstream ss(line);
         std::string cellValue;
         int col = 0;
 
         while (std::getline(ss, cellValue, ',') && col < cols) {
-            //since we using inheritance I had to change this to create a cell based on type (eg an "I" will create a cell using "I" class) -Aseel
-            //Yall can add ur stuff here I only added my part
             char zoneType = cellValue[0];
             switch (zoneType)
             {
@@ -86,19 +86,20 @@ void Region::printRegion() const {
             if(cell != nullptr)
             {   if (cell->population > 0)
                 {
-                    std::cout << cell->population << " "; //changed this to print population if there is any (like the ppt)
+                    std::cout << cell->population << " "; //print population if the cell has it
                 }else{
-                    std::cout << cell->zoneType << " "; //changed "." to "->" since its a ptr now
+                    std::cout << cell->zoneType << " "; //print zone type if population is zero
                 }
 
             }else{
-                std::cout << "  ";
+                std::cout << "  "; //empty space for null pointers
             }
         }
         std::cout << '\n';
     }
 }
 
+//prints the total pollution in the region
 void Region::printRegionPollution() const {
     const int cellWidth = 6; 
     int totalpoll = 0;
@@ -109,6 +110,7 @@ void Region::printRegionPollution() const {
     for (const auto& row : grid) {
         for (const auto& cell : row) {
             if (cell != nullptr) {
+                //printing grids population and zonetypes like before
                 if (cell->population > 0) {
                     std::cout << std::setw(cellWidth - 3) << cell->population; 
                 } else {
@@ -116,6 +118,7 @@ void Region::printRegionPollution() const {
                 }
 
                 if (cell->pollution > 0) {
+                    //print pollution for cells with pollution
                     std::cout << "(" << cell->pollution << ")";
                     totalpoll+= cell->pollution;
                 } else {
@@ -131,6 +134,7 @@ void Region::printRegionPollution() const {
     std::cout << "--------------------------------------\n\n";
 }
 
+//determines the region's dimensions (rows and cols) by parsing the configuration file
 void Region::getRegionSize(const std::string& fileName, int& rows, int& cols) {
     std::ifstream file("./" + fileName);
     if (!file.is_open()) {
@@ -160,6 +164,7 @@ void Region::getRegionSize(const std::string& fileName, int& rows, int& cols) {
     }
 }
 
+//returns a vector of pointers to adjacent cells around a specified coordinates
 std::vector<Cell*> Region::getAdjacentCells(int x, int y) const {
 
     std::vector<Cell*> adjCells;
@@ -168,7 +173,7 @@ std::vector<Cell*> Region::getAdjacentCells(int x, int y) const {
     //else dx = 0, if dx not last row then set dx = 1 to check row below else set = 0
     for (int dx = (x > 0 ? -1 : 0); dx <= (x < rows - 1 ? 1 : 0); dx++)
     {
-        //deviation of col, col to left? dy = -1 else dy = 0. not last col? dy = 1 else dy = 0
+        //same as previous for loop but left and right
         for (int dy = (y > 0 ? -1 : 0); dy <= (y < grid[x + dx].size() ? 1 : 0); dy++)
         {
             if (dx != 0 || dy != 0) //make sure we dont add the curr cell
@@ -181,7 +186,7 @@ std::vector<Cell*> Region::getAdjacentCells(int x, int y) const {
                 //since non uniform grid i have to check if the new coord is within bounds
                 if (newX >= 0 && newX < rows && newY >= 0 && newY < grid[newX].size())
                 {
-                    if (grid[newX][newY] != nullptr) { //make sure not nullptr
+                    if (grid[newX][newY] != nullptr) {
                         adjCells.push_back(grid[newX][newY]);
                     }               
                 }
@@ -195,6 +200,7 @@ std::vector<Cell*> Region::getAdjacentCells(int x, int y) const {
 
 }
 
+//bool to check if a cell is adjacent to a powerline "T" or "#"
 bool Region::adjToPowerline(int x, int y) const {
     std::vector<Cell*> adjCells = getAdjacentCells(x, y);
     for (const auto& cell : adjCells)
@@ -208,6 +214,7 @@ bool Region::adjToPowerline(int x, int y) const {
     
 }
 
+//returns how many cells with a specified population are adjacent to our current cell
 int Region::getCountPopulatedAdjCell(int x, int y, int population) const{
     std::vector<Cell*> adjCells = getAdjacentCells(x, y);
     int count = 0;
@@ -223,14 +230,17 @@ int Region::getCountPopulatedAdjCell(int x, int y, int population) const{
     return count;
 }
 
+//returns regions goods
 int Region::getAvailableGoods() const{
     return goods;
 }
 
+//returns regions workers
 int Region::getAvailableWorkers() const{
     return workers;
 }
 
+//increment or decrement goods (negative value = decrement, positive value = increment)
 void Region::modifyAvailableGoods(int count){
     goods += count;
     if (goods < 0) //making sure it doesnt become negative
@@ -240,6 +250,7 @@ void Region::modifyAvailableGoods(int count){
     
 }
 
+//increment or decrement workers (negative value = decrement, positive value = increment)
 void Region::modifyAvailableWorkers(int count) {
     workers += count;
     if (workers < 0)
@@ -249,18 +260,7 @@ void Region::modifyAvailableWorkers(int count) {
     
 }
 
-int Region::getTotalAdjacentPopulation(int x, int y) const {
-    int totalPopulation = 0;
-    std::vector<Cell*> adjacentCells = getAdjacentCells(x, y);
-    for (const auto& cell : adjacentCells) {
-        if (cell != nullptr) {
-            totalPopulation += cell->population;
-        }
-    }
-    return totalPopulation;
-}
-
-
+//simulates the regions growth over time while printing updates based on the refresh rate
 void Region::runSim(int timeLimit, int refreshRate){
 
     int timeStep = 0;
@@ -286,6 +286,7 @@ void Region::runSim(int timeLimit, int refreshRate){
 
                         timeStep++;
 
+                        //only prints if our curr timestep is a multiple of our refresh rate
                         if (timeStep % refreshRate == 0) {
                             std::cout << "Time step " << timeStep << ":" << std::endl;
                             printRegion();
@@ -317,7 +318,7 @@ void Region::runSim(int timeLimit, int refreshRate){
     
 }
 
-
+//prints the total populations of the region for Industrial, Commercial and Residential
 void Region::printTotalPopulations() const{
     int totalRes = 0;
     int totalCom = 0;
@@ -346,9 +347,7 @@ void Region::printTotalPopulations() const{
 
     std::cout << "Total Residential Population: " << totalRes<< std::endl;
     std::cout << "Total Industrial Population: " << totalInd<< std::endl;
-    std::cout << "Total Commercial Population: " << totalCom<< std::endl;
-    //will add rest later
-    
+    std::cout << "Total Commercial Population: " << totalCom<< std::endl;    
 }
 
 void Region::selectArea(std::vector<std::vector<Cell*>> clonedGrid, int timeLimit, int refreshRate) const {
@@ -368,11 +367,13 @@ void Region::selectArea(std::vector<std::vector<Cell*>> clonedGrid, int timeLimi
         std::cin >> y1;
     }
 
+    //the new selected areas rows and cols
     int newRows = rows - x1;
     int newCols = cols - y1;
 
     Region* subRegion = new Region(newRows, newCols);
 
+    //creating a clone using our new coordinates
     for (int i = x1; i < rows; ++i) {
         for (int j = y1; j < cols; ++j) {
             if (clonedGrid[i][j] != nullptr) {
