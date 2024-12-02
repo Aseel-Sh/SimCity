@@ -21,6 +21,9 @@ void Config::loadConfig(const std::string& fileName) {
         std::getline(ss, key, ':');
         std::getline(ss, value);
 
+        value.erase(value.find_last_not_of(" \t\r\n") + 1);
+
+
         if (key == "Region Layout") {
             regionFile = value;
         }
