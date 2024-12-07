@@ -1,6 +1,6 @@
 # SimCity
 
-Group Memebers: Aseel Shaheen, Kyilee Bell, Ronald Perez, Marcelo Gonzalez
+Group Members: Aseel Shaheen, Kyilee Bell, Ronald Perez, Marcelo Gonzalez
 
 ## How to compile/run SimCity
 ### Method 1: Makefile 
